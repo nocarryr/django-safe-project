@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/nocarryr/django-safe-project.svg?branch=master)](https://travis-ci.org/nocarryr/django-safe-project)
+
 # django-safe-project
 Creates and uses the installed Django project template to keep sensitive data out of global settings.
 
