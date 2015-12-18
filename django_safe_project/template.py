@@ -1,7 +1,13 @@
 import os
+import sys
 import shutil
 
 from django_safe_project import safe_settings
+
+PY3 = sys.version_info.major > 2
+
+if PY3:
+    basestring = str
 
 class Template(object):
     def __init__(self, **kwargs):
