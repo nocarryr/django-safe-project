@@ -10,16 +10,30 @@ if PY3:
     basestring = str
 
 class Template(object):
+    """Handles copying and modifying the project template.
+
+    :param source: Source path of the project template
+    :param dest: Destination for modified template
+
+    """
     def __init__(self, **kwargs):
         self.source = kwargs.get('source')
         self.dest = kwargs.get('dest')
     def build_dest(self):
+        """Initiates the copy/modification process.
+
+        This is not called by the constructor.
+        """
         ign = shutil.ignore_patterns('*.pyc')
         shutil.copytree(self.source, self.dest, ignore=ign)
         self.build_local_settings()
         self.update_settings()
         self.build_gitignore()
     def build_local_settings(self):
+        """Generates the local_settings.py module.
+
+        Uses the contents of safe_settings.py.
+        """
         filename = os.path.join(self.dest, 'project_name', 'local_settings.py')
         lines = []
         for attr, val in self.iter_safe_settings():
@@ -30,6 +44,11 @@ class Template(object):
         with open(filename, 'w') as f:
             f.write('\n'.join(lines))
     def update_settings(self):
+        """Modifies the destination's settings.py module.
+
+        Adds an import for the generated local_settings.py.
+        All values for 'local_settings' are either replaced via `getattr`.
+        """
         filename = os.path.join(self.dest, 'project_name', 'settings.py')
         with open(filename, 'r') as f:
             lines = f.read().splitlines()
@@ -58,6 +77,8 @@ class Template(object):
         with open(filename, 'w') as f:
             f.write('\n'.join(lines))
     def build_gitignore(self):
+        """Builds a `.gitignore` file to exclude the `local_settings` module.
+        """
         filename = os.path.join(self.dest, 'project_name', '.gitignore')
         if os.path.exists(filename):
             with open(filename, 'r') as f:
@@ -81,9 +102,16 @@ class Template(object):
             return "'%s'" % (obj)
         return str(obj)
     def build_settings_dict(self, lines):
+        """Parses the `settings.py` file manually.
+
+        Generates a `dict` of settings attributes with their corresponding
+        line numbers.
+        """
         d = {}
         bracket_chars = [['{', '[', '('], ['}', ']', ')']]
         def find_bracket_close(line_num, bracket_char):
+            # The results of this function are not currently used, but may
+            # possibly be in future versions.
             close_char = bracket_chars[1][bracket_chars[0].index(bracket_char)]
             num_open = 0
             for i, line in enumerate(lines[line_num:]):
