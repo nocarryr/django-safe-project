@@ -40,8 +40,8 @@ def main(project_name=None):
     dest_dir = os.path.join(tmp_dir, 'project_template')
 
     try:
-        template = build_template(source=source_dir, dest=dest_dir)
-        r = start_project(project_name, dest_dir)
+        build_template(source=source_dir, dest=dest_dir)
+        start_project(project_name, dest_dir)
     finally:
         shutil.rmtree(tmp_dir)
 
