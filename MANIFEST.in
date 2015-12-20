@@ -1,0 +1,8 @@
+include LICENSE.txt
+include README.md
+
+recursive-include django_safe_project *
+
+recursive-exclude * __pycache__
+recursive-exclude * *.py[co]
+recursive-exclude * *.orig

@@ -7,12 +7,17 @@ setup(
     author_email = "matt@nomadic-recording.com",
     description = ("Start Django projects with sensitive data outside of the "
                                    "global settings module"),
+    url='https://github.com/nocarryr/django-safe-project',
+    license='MIT',
     keywords = "django",
     packages=['django_safe_project'],
+    include_package_data=True,
     scripts=['startproject.py'],
     entry_points={
         'console_scripts':[
             'django-safe-project = startproject:main',
         ],
     },
+    setup_requires=['setuptools-markdown'],
+    long_description_markdown_filename='README.md',
 )
