@@ -8,7 +8,7 @@ To install `django-safe-project` run:
 ```
 pip install django-safe-project
 ```
-Or download the latest release [here](https://github.com/nocarryr/django-safe-project) and install by running:
+Or download the latest release [here](https://github.com/nocarryr/django-safe-project/releases/latest) and install by running:
 ```
 python setup.py install
 ```
