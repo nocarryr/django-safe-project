@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name = "django-safe-project",
-    version = "0.0.1",
+    version = "0.0.2",
     author = "Matthew Reid",
     author_email = "matt@nomadic-recording.com",
     description = ("Start Django projects with sensitive data outside of the "
