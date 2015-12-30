@@ -59,7 +59,22 @@ class Template(object):
                     last_import = i
                 elif last_import is not None:
                     break
-            lines.insert(last_import + 1, 'import local_settings')
+            imp_lines = [
+                'import warnings',
+                'try:',
+                '    import local_settings',
+                'except ImportError:',
+                '    class local_settings(object):',
+            ]
+            for key, val in self.iter_safe_settings():
+                if key == 'SECRET_KEY':
+                    val = {'value':"'NotSecret'"}
+                elif 'value' not in val:
+                    continue
+                imp_lines.append('        %s=%s' % (key,val['value']))
+            imp_lines.append("    warnings.warn('local_settings module not found. Using unsafe defaults', ImportWarning)")
+            for i, imp_line in enumerate(imp_lines):
+                lines.insert(last_import + i + 1, imp_line)
         add_import()
         settings_dict = self.build_settings_dict(lines)
         for attr, val in self.iter_safe_settings():
