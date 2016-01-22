@@ -77,7 +77,9 @@ class Template(object):
                 lines.insert(last_import + i + 1, imp_line)
         add_import()
         settings_dict = self.build_settings_dict(lines)
+        local_settings_attrs = []
         for attr, val in self.iter_safe_settings():
+            local_settings_attrs.append(attr)
             if 'default' in val:
                 df = self.make_py_string(val['default'])
                 value = "getattr(local_settings, '%s', %s)" % (attr, df)
@@ -89,6 +91,7 @@ class Template(object):
             else:
                 d = settings_dict[attr]
                 lines[d['line_num']] = ' = '.join([attr, value])
+        lines.extend(self.add_custom_settings(local_settings_attrs))
         with open(filename, 'w') as f:
             f.write('\n'.join(lines))
     def build_gitignore(self):
@@ -159,3 +162,23 @@ class Template(object):
             if line_num is None:
                 break
         return d
+    def add_custom_settings(self, ignored_settings):
+        lines = [
+            '',
+            '# If any settings are added to `local_settings.py` later,',
+            '# import them here.',
+            '_local_settings_attrs = [',
+        ]
+        for s in ignored_settings:
+            lines.append('    {0},'.format(s))
+        lines.extend([
+            ']',
+            'for attr in dir(local_settings):',
+            '    if attr in _local_settings_attrs:',
+            '        continue',
+            '    if not attr.isupper():',
+            '        continue',
+            '    locals()[attr] = getattr(local_settings, attr)',
+            '',
+        ])
+        return lines
