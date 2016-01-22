@@ -170,7 +170,7 @@ class Template(object):
             '_local_settings_attrs = [',
         ]
         for s in ignored_settings:
-            lines.append('    {0},'.format(s))
+            lines.append("    '{0}',".format(s))
         lines.extend([
             ']',
             'for attr in dir(local_settings):',
