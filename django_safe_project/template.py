@@ -26,6 +26,13 @@ class Template(object):
         """
         ign = shutil.ignore_patterns('*.pyc')
         shutil.copytree(self.source, self.dest, ignore=ign)
+        for root, dirs, files in os.walk(self.dest):
+            for name in files:
+                if os.path.splitext(name)[1] != '.py-tpl':
+                    continue
+                name = os.path.join(root, name)
+                new_name = '.'.join([os.path.splitext(name)[0], 'py'])
+                os.rename(name, new_name)
         self.build_local_settings()
         self.update_settings()
         self.build_gitignore()
